@@ -1,3 +1,5 @@
+import re
+
 from rest_framework import serializers
 
 from user.models import User
@@ -15,10 +17,17 @@ class UserSerializer(serializers.ModelSerializer):
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
+        password = validated_data['password']
+
+
+        pattern = r'^(?=.*[A-Z])(?=.*\d).{4,}$'
+
+        if not re.match(pattern, password):
+            raise serializers.ValidationError(
+                "Parol kamida 1 ta katta harf, 1 ta raqam bo‘lishi va uzunligi 4 tadan kam bo‘lmasligi kerak."
+            )
+
         user = User(**validated_data)
-
-        # validation code
-
-        user.set_password(validated_data['password'])
+        user.set_password(password)
         user.save()
         return user
