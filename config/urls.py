@@ -26,9 +26,11 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     path('products/', include('products.urls')),
-    path('Sale/', include('Sale.urls')),
+
     path('users/', include('user.urls')),
     path('payment/', include('payment.url')),
+    path('order/', include('order.urls')),
+    path('karzinka/', include('Karzinka.urls')),
 
     path('', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
