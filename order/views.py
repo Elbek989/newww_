@@ -1,3 +1,5 @@
+from itertools import product
+
 from rest_framework import generics, permissions, status, serializers
 from rest_framework.response import Response
 from .models import Order, OrderItem
@@ -48,14 +50,23 @@ class OrderListCreateView(generics.ListCreateAPIView):
         )
 
         for item in cart_items:
+            product = item.product
+
+
+
+            product.quantity -= item.quantity
+            product.save(update_fields=['quantity'])
+
             OrderItem.objects.create(
                 order=order,
-                product=item.product,
+                product=product,
                 quantity=item.quantity,
-                total_price=item.quantity * item.product.price
+                total_price=item.quantity * product.price
             )
 
         cart.items.all().delete()
+
+
 class OrderHistoryView(generics.ListAPIView):
     serializer_class = OrderSerializer
     permission_classes = [permissions.IsAuthenticated]
