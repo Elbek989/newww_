@@ -1,39 +1,29 @@
-import re
-from django.core.exceptions import ValidationError
-from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
-from rest_framework.exceptions import ValidationError as RestValidationError
+from .models import Chatty
+from django.contrib.auth import get_user_model
 
-from user.models import User
+User = get_user_model()
 
 
 class LoginSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    password = serializers.CharField()
+
+
+class RegisterSerializer(serializers.Serializer):
+    email = serializers.EmailField()
     username = serializers.CharField()
-    password = serializers.CharField(write_only=True)
+    password = serializers.CharField()
 
 
-class UserSerializer(serializers.ModelSerializer):
+class VerifyOTPSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    otp = serializers.CharField()
+
+
+class Chat(serializers.ModelSerializer):
+    username = serializers.CharField(source='user.username', read_only=True)
+
     class Meta:
-        model = User
-        fields = ['id', 'username', 'password', 'is_customer']
-        extra_kwargs = {'password': {'write_only': True}}
-
-    def create(self, validated_data):
-        password = validated_data['password']
-        user = User(**validated_data)
-
-        # pattern = r'^(?=.*[A-Z])(?=.*\d).{4,}$'
-        #
-        # if not re.match(pattern, password):
-        #     raise serializers.ValidationError(
-        #         "Parol kamida 1 ta katta harf, 1 ta raqam bo‘lishi va uzunligi 4 tadan kam bo‘lmasligi kerak."
-        #     )
-
-        try:
-            validate_password(password, user)
-        except ValidationError as e:
-            raise RestValidationError(e.messages)
-
-        user.set_password(password)
-        user.save()
-        return user
+        model = Chatty
+        fields = ['id', 'text', 'created_at', 'is_admin_message', 'username']

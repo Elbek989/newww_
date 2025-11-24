@@ -7,6 +7,8 @@ from rest_framework.views import APIView
 from rest_framework import generics, status, permissions
 from rest_framework.viewsets import ModelViewSet
 
+from user.models import Chatty
+from user.serializers import Chat
 from .models import Product, ProductCategory
 from .serializers import ProductSerializer, ProductCategorySerializer
 from .make_token import get_user_token_from_serializer
@@ -16,6 +18,8 @@ class ProductListView(generics.ListAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     permission_classes = []
+
+
 class ProductCreateView(generics.CreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
@@ -32,22 +36,26 @@ class ProductCreateView(generics.CreateAPIView):
 
         return super().create(request, *args, **kwargs)
 
+
 class ProductDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     permission_classes = []
 
 
-class ProductCategoryView(generics.ListAPIView):
-    queryset = ProductCategory.objects.all()
-    serializer_class = ProductCategorySerializer
-    permission_classes = []
+
+class ProductCategoryView(APIView):
+    def get(self, request):
+        # misol uchun
+        categories = ["Fruits", "Vegetables", "Drinks"]
+        return Response(categories)
 
 
 class ProductCategorycreate(generics.CreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductCategorySerializer
     permission_classes = [permissions.IsAuthenticated]
+
     def create(self, request, *args, **kwargs):
         user = request.user
 

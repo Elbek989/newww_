@@ -2,6 +2,8 @@ from itertools import product
 
 from rest_framework import generics, permissions, status, serializers
 from rest_framework.response import Response
+from rest_framework.views import APIView
+
 from .models import Order, OrderItem
 from .serializers import OrderSerializer
 from Karzinka.models import Cart, CartItem

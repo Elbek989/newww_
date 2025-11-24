@@ -13,7 +13,7 @@ class ProductCategory(models.Model):
     name = models.CharField(max_length=100)
 
     def __str__(self):
-        return self.name
+        return self.name0
 
 class ProductTypes(models.TextChoices):
     SIMPLE = 'simple', "SIMPLE"
@@ -26,7 +26,7 @@ class Product(models.Model):
     supermarket = models.ForeignKey(Supermarket, null=True, blank=True, on_delete=models.SET_NULL)
     quantity = models.PositiveIntegerField()
     description = models.TextField()
-    product_id = models.IntegerField(unique=True)  # agar maxsus id kerak bo‘lsa
+    product_id = models.IntegerField(unique=True)
     product_type = models.CharField(choices=ProductTypes.choices, max_length=10, null=True, blank=True)
 
     def __str__(self):

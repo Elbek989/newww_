@@ -1,6 +1,8 @@
 from django.urls import path
+from django.views.generic import TemplateView
 
 from Karzinka.views import CartUpdateItemView
+from user.views import ChatLoginAPIView
 from .views import OrderListCreateView, OrderHistoryView
 
 urlpatterns = [
